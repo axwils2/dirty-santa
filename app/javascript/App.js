@@ -1,6 +1,9 @@
+// @flow
 import React from 'react';
 
-const App = () => (
+type TestType = {};
+
+const App = (): React$Node => (
   <div>Hello World</div>
 );
 

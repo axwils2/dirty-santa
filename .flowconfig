@@ -1,0 +1,20 @@
+[ignore]
+
+[include]
+
+[libs]
+
+[lints]
+
+[options]
+esproposal.optional_chaining=enable
+module.name_mapper='^App' -> '<PROJECT_ROOT>/app/javascript/App.js'
+module.name_mapper='^pages\(.*\)$' -> '<PROJECT_ROOT>/app/javascript/pages/\1'
+module.name_mapper='^components\(.*\)$' -> '<PROJECT_ROOT>/app/javascript/components/\1'
+module.name_mapper='^types\(.*\)$' -> '<PROJECT_ROOT>/app/javascript/types/\1'
+module.name_mapper='^constants\(.*\)$' -> '<PROJECT_ROOT>/app/javascript/constants/\1'
+module.name_mapper='^services\(.*\)$' -> '<PROJECT_ROOT>/app/javascript/services/\1'
+module.name_mapper='^assets\(.*\)$' -> '<PROJECT_ROOT>/app/javascript/assets/\1'
+module.name_mapper='^hooks\(.*\)$' -> '<PROJECT_ROOT>/app/javascript/hooks/\1'
+
+[strict]
