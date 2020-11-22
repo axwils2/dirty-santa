@@ -1,0 +1,25 @@
+{
+  "name": "dirty_santa",
+  "private": true,
+  "scripts": {
+    "start-dev": "foreman start -f Procfile.dev -p 3000"
+  },
+  "dependencies": {
+    "@babel/preset-react": "^7.12.7",
+    "@rails/actioncable": "^6.0.0",
+    "@rails/activestorage": "^6.0.0",
+    "@rails/ujs": "^6.0.0",
+    "@rails/webpacker": "4.3.0",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
+    "prop-types": "^15.7.2",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
+  },
+  "version": "0.1.0",
+  "devDependencies": {
+    "@babel/cli": "^7.12.7",
+    "@babel/core": "^7.12.7",
+    "@babel/preset-flow": "^7.12.1",
+    "webpack-dev-server": "^3.11.0"
+  }
+}
