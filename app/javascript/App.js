@@ -1,10 +1,17 @@
 // @flow
 import React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom'
+import CssBaseline from '@material-ui/core/CssBaseline';
 
-type TestType = {};
+import { ThemeProvider } from 'components/Theme';
 
 const App = (): React$Node => (
-  <div>Hello World</div>
+  <Router>
+    <ThemeProvider>
+      <CssBaseline />
+      <div>Hello World</div>
+    </ThemeProvider>
+  </Router>
 );
 
 export default App;
