@@ -17,7 +17,7 @@ module.exports = function(api) {
 
   return {
     presets: [
-      '@babel/preset-flow',
+      isDevelopmentEnv && ['@babel/preset-flow'],
       isTestEnv && [
         '@babel/preset-env',
         {
