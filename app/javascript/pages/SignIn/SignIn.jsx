@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 
-const SignIn = () => {
+const SignIn = (): React$Node => {
   return (
     <div>SignIn</div>
   );
