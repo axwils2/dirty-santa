@@ -3,4 +3,6 @@ class Game < ApplicationRecord
   has_many :given_gifts, through: :players
 
   has_one :game_state, dependent: :destroy
+
+  has_secure_token :token
 end
