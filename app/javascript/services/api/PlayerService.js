@@ -10,8 +10,17 @@ function fetch(token: string): Promise<Player> {
   });
 }
 
+function update(token: string, data: $Shape<Player>): Promise<Player> {
+  return request({
+    url: `/players/${token}`,
+    method: 'PATCH',
+    data
+  });
+}
+
 const PlayerService = {
-  fetch
+  fetch,
+  update
 };
 
 export default PlayerService;

@@ -16,6 +16,20 @@ const theme: Object = createMuiTheme({
       contrastText: '#fff',
     }
   },
+  props: {
+    MuiButton: {
+      variant: 'contained'
+    },
+    MuiTextField: {
+      variant: 'outlined'
+    },
+    MuiFormControl: {
+      variant: 'outlined'
+    },
+    MuiSelect: {
+      variant: 'outlined'
+    }
+  }
 });
 
 export default theme;
