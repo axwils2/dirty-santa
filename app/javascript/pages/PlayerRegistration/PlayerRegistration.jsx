@@ -1,5 +1,6 @@
 // @flow
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
@@ -8,7 +9,6 @@ import FullPageBox from 'components/FullPageBox';
 import PlayerForm from 'components/PlayerForm';
 import GiftForm from 'components/GiftForm';
 import { PlayerService, PlayerAvatarService } from 'services/api';
-import { useNotification } from 'hooks';
 
 import type { Match } from 'types/RouterTypes';
 import type { Player } from 'types/PlayerTypes';
@@ -23,39 +23,40 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const PlayerGiftProfile = ({ match }: { match: Match }): React$Node => {
-  const token = match.params.token;
+const PlayerRegistration = ({ match }: { match: Match }): React$Node => {
+  const gameToken = match.params.gameToken;
   const [player, setPlayer] = useState(null);
   const classes = useStyles();
-  const { notify } = useNotification();
+  const history = useHistory();
 
   useEffect(() => {
-    if (!token) return;
+    if (!gameToken) return;
 
-    PlayerService.fetch(token)
+    PlayerService.newPlayer({ game_token: gameToken })
       .then(response => {
         setPlayer(response);
       })
-  }, [token]);
+  }, [gameToken]);
 
-  const onPlayerSubmit = (savedPlayer: Player) => {
-    PlayerService.update(token, savedPlayer)
+  const onSubmit = (savedPlayer: Player) => {
+    console.log(savedPlayer);
+    PlayerService.create(savedPlayer)
       .then(response => {
         if (savedPlayer.avatar) {
           const formData = new FormData();
           formData.append('avatar', savedPlayer.avatar);
 
-          PlayerAvatarService.update(token, formData)
-            .then(avatar => {
-              setPlayer({ ...response, avatarUrl: avatar.avatarUrl });
-              notify('Your profile has been updated!');
-            })
+          PlayerAvatarService.create(
+            response.token,
+            formData
+          ).then(() => {
+            history.push(`/players/${response.token}`)
+          })
         } else {
-          setPlayer(response);
-          notify('Your profile has been updated!');
+          history.push(`/players/${response.token}`)
         }
       })
-  };
+  }
 
   if (!player) return null;
 
@@ -66,7 +67,7 @@ const PlayerGiftProfile = ({ match }: { match: Match }): React$Node => {
           <Grid item xs={12}>
             <PlayerForm
               player={player}
-              onSubmit={onPlayerSubmit}
+              onSubmit={onSubmit}
             />
           </Grid>
         </Grid>
@@ -75,4 +76,4 @@ const PlayerGiftProfile = ({ match }: { match: Match }): React$Node => {
   )
 };
 
-export default PlayerGiftProfile;
+export default PlayerRegistration;

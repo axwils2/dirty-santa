@@ -9,8 +9,17 @@ function create(token: string, data: *): Promise<{ avatarUrl: string }> {
   });
 }
 
+function update(token: string, data: *): Promise<{ avatarUrl: string }> {
+  return request({
+    url: `/players/${token}/avatars/${token}`,
+    method: 'PATCH',
+    data
+  });
+}
+
 const PlayerAvatarService = {
-  create
+  create,
+  update
 };
 
 export default PlayerAvatarService;

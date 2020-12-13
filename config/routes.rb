@@ -5,8 +5,8 @@ Rails.application.routes.draw do
     scope module: :v1 do
       resources :gifts, only: %i[create update]
 
-      resources :players, param: :token, only: %i[show update] do
-        resources :avatars, only: %i[create], controller: 'players/avatars'
+      resources :players, param: :token, only: %i[new show create update] do
+        resources :avatars, only: %i[create update], controller: 'players/avatars'
       end
     end
   end

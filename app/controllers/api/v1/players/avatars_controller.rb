@@ -14,6 +14,19 @@ module Api
           }
         end
 
+        def update
+          player.avatar.purge
+          player.avatar.attach(params[:avatar])
+
+          render json: { 
+            data: {
+              attributes: {
+                avatarUrl: helpers.attachment_url(player.avatar)
+              }
+            }
+          }
+        end
+
         private
 
         def player

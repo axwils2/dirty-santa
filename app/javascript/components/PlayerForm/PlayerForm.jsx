@@ -9,9 +9,6 @@ import Button from '@material-ui/core/Button';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import Avatar from '@material-ui/core/Avatar';
 
-import { PlayerAvatarService, PlayerService } from 'services/api';
-import { useNotification } from 'hooks';
-
 import type { Player } from 'types/PlayerTypes';
 
 const useStyles = makeStyles(theme => ({
@@ -47,28 +44,15 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const PlayerForm = ({ player }: { player: Player }): React$Node => {
+const PlayerForm = ({ player, onSubmit }: { player: Player, onSubmit: Player => void }): React$Node => {
   const [editablePlayer, setEditablePlayer] = useState(player);
   const [avatar, setAvatar] = useState(null);
   const classes = useStyles();
-  const { notify } = useNotification();
 
   const submitForm = () => {
-    if (!player || !editablePlayer) return;
+    if (!editablePlayer) return;
 
-    const updates = {};
-    Object.keys(editablePlayer).forEach(key => {
-      const value = editablePlayer[key];
-      
-      if (value !== player[key]) {
-        updates[key] = value;
-      }
-    });
-
-    PlayerService.update(player.token, updates)
-      .then(response => {
-        notify('Player profile has been updated!');
-      });
+    onSubmit(editablePlayer);
   };
 
   const updatePlayer = e => {
@@ -78,15 +62,14 @@ const PlayerForm = ({ player }: { player: Player }): React$Node => {
   const updateAvatar = e => {
     const formData = new FormData();
     formData.append('avatar', e.target.files[0]);
-
-    PlayerAvatarService.create(player.token, formData)
-      .then(response => {
-        notify('Player avatar has been updated!');
-        setEditablePlayer(prev => ({ ...prev, avatarUrl: response.avatarUrl }))
-      });
+    setEditablePlayer(prev => ({
+      ...prev,
+      avatar: e.target.files[0],
+      avatarUrl: URL.createObjectURL(e.target.files[0])
+    }))
   };
 
-  if (!player || !editablePlayer) return null;
+  if (!editablePlayer) return null;
 
   return (
     <Paper className={classes.form}>
@@ -116,7 +99,7 @@ const PlayerForm = ({ player }: { player: Player }): React$Node => {
         <Grid item xs={12} sm={6}>
           <TextField
             label='Name'
-            value={editablePlayer.name}
+            value={editablePlayer.name || ''}
             name='name'
             onChange={updatePlayer}
             margin='normal'
@@ -124,7 +107,7 @@ const PlayerForm = ({ player }: { player: Player }): React$Node => {
           />
           <TextField
             label='Email'
-            value={editablePlayer.email}
+            value={editablePlayer.email || ''}
             name='email'
             onChange={updatePlayer}
             margin='normal'

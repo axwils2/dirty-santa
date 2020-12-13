@@ -1,5 +1,6 @@
 // @flow
 import axios from 'axios';
+import snakeCase from 'lodash/snakeCase';
 
 const env = process.env.NODE_ENV;
 
@@ -38,4 +39,14 @@ const request: Object = (options: { skipDefaultHandling?: boolean }) => {
     .catch(onError);
 };
 
-export { request as default, client };
+const snakeCaseKeys = (apiObject: {}): {} => {
+  const newApiObject = {};
+  Object.keys(apiObject).forEach(key => {
+    const value = apiObject[key];
+    newApiObject[snakeCase(key)] = value;
+  });
+
+  return newApiObject;
+};
+
+export { request as default, client, snakeCaseKeys };
