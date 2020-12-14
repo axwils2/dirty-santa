@@ -76,6 +76,7 @@ const PlayerForm = ({ player, onSubmit }: { player: Player, onSubmit: Player => 
       <Typography variant='h5' gutterBottom>Player Information</Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
+          <Typography variant='overline'>Player Picture</Typography>
           <div className={classes.avatarContainer}>
             <Avatar
               className={classes.avatar}

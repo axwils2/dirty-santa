@@ -3,10 +3,13 @@ Rails.application.routes.draw do
 
   namespace :api, defaults: { format: 'json' } do
     scope module: :v1 do
-      resources :gifts, only: %i[create update]
-
       resources :players, param: :token, only: %i[new show create update] do
         resources :avatars, only: %i[create update], controller: 'players/avatars'
+        resources :gifts, only: %i[new show create update], controller: 'players/gifts'
+      end
+
+      resources :gifts do
+        resources :images, only: %i[create update], controller: 'gifts/images'
       end
     end
   end

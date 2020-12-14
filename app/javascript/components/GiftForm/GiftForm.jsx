@@ -47,29 +47,15 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const GiftForm = ({ gift }: { gift: ?Gift }): React$Node => {
+const GiftForm = ({ gift, onSubmit }: { gift: Gift, onSubmit: Gift => void }): React$Node => {
   const [editableGift, setEditableGift] = useState(gift);
   const [avatar, setAvatar] = useState(null);
   const classes = useStyles();
-  const { notify } = useNotification();
 
   const submitForm = () => {
-    if (!gift || !editableGift) return;
+    if (!editableGift) return;
 
-    // const updates = {};
-    const formData = {};
-    Object.keys(editableGift).forEach(key => {
-      const value = editableGift[key];
-      
-      if (value !== gift[key]) {
-        formData.append(key, value);
-      }
-    });
-
-    GiftService.update(gift.id, formData)
-      .then(response => {
-        notify('Gift has been updated!');
-      });
+    onSubmit(editableGift);
   };
 
   const updateGift = e => {
@@ -79,21 +65,21 @@ const GiftForm = ({ gift }: { gift: ?Gift }): React$Node => {
   const updateImage = e => {
     const formData = new FormData();
     formData.append('image', e.target.files[0]);
-
-    // GiftImageService.create(gift, formData)
-    //   .then(response => {
-    //     notify('Gift has been updated!');
-    //     setEditableGift(prev => ({ ...prev, avatarUrl: response.avatarUrl }))
-    //   });
+    setEditableGift(prev => ({
+      ...prev,
+      image: e.target.files[0],
+      imageUrl: URL.createObjectURL(e.target.files[0])
+    }))
   };
 
-  if (!gift || !editableGift) return null;
+  if (!editableGift) return null;
 
   return (
     <Paper className={classes.form}>
-      <Typography variant='h5' gutterBottom>Player Information</Typography>
+      <Typography variant='h5' gutterBottom>Gift Information</Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
+          <Typography variant='overline'>Gift Picture</Typography>
           <div className={classes.imageContainer}>
             <Avatar
               className={classes.image}
@@ -116,18 +102,17 @@ const GiftForm = ({ gift }: { gift: ?Gift }): React$Node => {
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            label='Name'
-            value={editableGift.title}
-            name='name'
+            label='Title'
+            value={editableGift.title || ''}
+            name='title'
             onChange={updateGift}
             margin='normal'
             fullWidth
           />
           <TextField
-            label='Email'
-            value={editableGift.description}
-            name='email'
-            multiline
+            label='Secret Gift Card Description'
+            value={editableGift.description || ''}
+            name='description'
             onChange={updateGift}
             margin='normal'
             fullWidth

@@ -39,7 +39,6 @@ const PlayerRegistration = ({ match }: { match: Match }): React$Node => {
   }, [gameToken]);
 
   const onSubmit = (savedPlayer: Player) => {
-    console.log(savedPlayer);
     PlayerService.create(savedPlayer)
       .then(response => {
         if (savedPlayer.avatar) {

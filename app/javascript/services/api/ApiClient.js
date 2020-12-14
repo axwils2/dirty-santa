@@ -11,7 +11,7 @@ const client: Object = axios.create({
 const request: Object = (options: { skipDefaultHandling?: boolean }) => {
   const onSuccess = response => {
     console.debug('Request Successful:', response);
-    return response.data.data.attributes;
+    return response.data.data?.attributes;
   };
 
   const onError = error => {
