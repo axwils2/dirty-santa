@@ -12,7 +12,7 @@ function newGift(token: string): Promise<Gift> {
 
 function fetch(token: string): Promise<Gift> {
   return request({
-    url: `/players/${token}/gifts`,
+    url: `/players/${token}/gifts/${token}`,
     method: 'GET'
   });
 }

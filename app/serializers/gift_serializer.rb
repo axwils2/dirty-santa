@@ -1,7 +1,7 @@
 class GiftSerializer < BaseSerializer
   extend AttachmentHelper
 
-  attributes :title, :description
+  attributes :id, :title, :description
 
   attribute :image_url do |gift|
     attachment_url(gift.image)

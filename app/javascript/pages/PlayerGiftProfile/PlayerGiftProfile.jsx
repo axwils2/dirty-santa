@@ -82,7 +82,14 @@ const PlayerGiftProfile = ({ match }: { match: Match }): React$Node => {
       GiftService.update(playerToken, savedGift)
         .then(response => {
           if (savedGift.image) {
-            notify('Your gift has been updated!');
+            const formData = new FormData();
+            formData.append('image', savedGift.image);
+
+            GiftImageService.update(savedGift.id, formData)
+              .then(image => {
+                setGift({ ...response, imageUrl: image.imageUrl });
+                notify('Your gift has been updated!');
+              })
           } else {
             setGift(response);
             notify('Your gift has been updated!');
@@ -99,8 +106,7 @@ const PlayerGiftProfile = ({ match }: { match: Match }): React$Node => {
           const formData = new FormData();
           // $FlowFixMe
           formData.append('image', savedGift.image);
-
-          GiftImageService.create(savedGift.id, formData)
+          GiftImageService.create(response.id, formData)
             .then(image => {
               setGift({ ...response, imageUrl: image.imageUrl });
               notify('Your gift has been added!');

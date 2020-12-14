@@ -11,7 +11,7 @@ function create(id: number, data: *): Promise<{ imageUrl: string }> {
 
 function update(id: number, data: *): Promise<{ imageUrl: string }> {
   return request({
-    url: `/gift/${id}/images/${id}`,
+    url: `/gifts/${id}/images/${id}`,
     method: 'PATCH',
     data
   });
