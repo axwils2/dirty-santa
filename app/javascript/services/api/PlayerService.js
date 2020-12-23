@@ -3,11 +3,10 @@ import request, { snakeCaseKeys } from './ApiClient';
 
 import type { Player } from 'types/PlayerTypes';
 
-function newPlayer(params: { game_token: string }): Promise<Player> {
+function newPlayer(): Promise<Player> {
   return request({
     url: '/players/new',
-    method: 'GET',
-    params
+    method: 'GET'
   });
 };
 

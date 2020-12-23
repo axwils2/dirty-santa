@@ -5,8 +5,8 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 
 import { ThemeProvider } from 'components/Theme';
 import { NotificationProvider } from 'components/Notification';
-import PlayerGiftProfile from 'pages/PlayerGiftProfile';
 import PlayerRegistration from 'pages/PlayerRegistration';
+import GiftList from 'pages/GiftList';
 
 import * as ROUTES from 'constants/routes';
 
@@ -17,7 +17,7 @@ const App = (): React$Node => (
       <NotificationProvider>
         <Switch>
           <Route path={ROUTES.PLAYER_REGISTRATION} component={PlayerRegistration} />
-          <Route path={ROUTES.PLAYER_PROFILE} component={PlayerGiftProfile} />
+          <Route path='/' component={GiftList} />
         </Switch>
       </NotificationProvider>
     </ThemeProvider>

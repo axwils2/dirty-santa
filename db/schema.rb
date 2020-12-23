@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_02_160304) do
+ActiveRecord::Schema.define(version: 2020_12_23_181445) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,28 +55,22 @@ ActiveRecord::Schema.define(version: 2020_12_02_160304) do
   create_table "gifts", force: :cascade do |t|
     t.string "title"
     t.string "description"
-    t.bigint "giver_id", null: false
     t.bigint "receiver_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["giver_id"], name: "index_gifts_on_giver_id"
     t.index ["receiver_id"], name: "index_gifts_on_receiver_id"
   end
 
   create_table "players", force: :cascade do |t|
-    t.bigint "game_id", null: false
     t.string "name"
     t.string "email"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "token"
-    t.index ["game_id"], name: "index_players_on_game_id"
     t.index ["token"], name: "index_players_on_token", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "game_states", "games"
-  add_foreign_key "gifts", "players", column: "giver_id"
   add_foreign_key "gifts", "players", column: "receiver_id"
-  add_foreign_key "players", "games"
 end

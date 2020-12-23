@@ -2,8 +2,7 @@ module Api
   module V1
     class PlayersController < ApplicationController
       def new
-        game = Game.find_by(token: params[:game_token])
-        render json: PlayerSerializer.new(Player.new(game: game))
+        render json: PlayerSerializer.new(Player.new)
       end
 
       def create

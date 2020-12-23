@@ -75,8 +75,25 @@ const PlayerForm = ({ player, onSubmit }: { player: Player, onSubmit: Player => 
     <Paper className={classes.form}>
       <Typography variant='h5' gutterBottom>Player Information</Typography>
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
-          <Typography variant='overline'>Player Picture</Typography>
+        <Grid item xs={12}>
+          <TextField
+            label='Name'
+            value={editablePlayer.name || ''}
+            name='name'
+            onChange={updatePlayer}
+            margin='normal'
+            fullWidth
+          />
+          {/* <TextField
+            label='Email'
+            value={editablePlayer.email || ''}
+            name='email'
+            onChange={updatePlayer}
+            margin='normal'
+            fullWidth
+          /> */}
+        </Grid>
+        <Grid item xs={12}>
           <div className={classes.avatarContainer}>
             <Avatar
               className={classes.avatar}
@@ -96,24 +113,6 @@ const PlayerForm = ({ player, onSubmit }: { player: Player, onSubmit: Player => 
               <PhotoCamera />
             </label>
           </div>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            label='Name'
-            value={editablePlayer.name || ''}
-            name='name'
-            onChange={updatePlayer}
-            margin='normal'
-            fullWidth
-          />
-          <TextField
-            label='Email'
-            value={editablePlayer.email || ''}
-            name='email'
-            onChange={updatePlayer}
-            margin='normal'
-            fullWidth
-          />
         </Grid>
         <Grid item xs={12}>
           <Button

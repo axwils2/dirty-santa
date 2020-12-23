@@ -10,8 +10,15 @@ const client: Object = axios.create({
 
 const request: Object = (options: { skipDefaultHandling?: boolean }) => {
   const onSuccess = response => {
-    console.debug('Request Successful:', response);
-    return response.data.data?.attributes;
+    console.log('Request Successful:', response);
+
+    const data = response.data.data;
+
+    if (Array.isArray(data)) {
+      return data.map(d => d.attributes);
+    } else {
+      return response.data.data?.attributes;
+    }
   };
 
   const onError = error => {

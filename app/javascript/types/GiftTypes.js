@@ -4,5 +4,6 @@ export type Gift = {
   title: ?string,
   description: ?string,
   imageUrl: ?string,
-  image?: *
+  image?: *,
+  receiverName: ?string
 }

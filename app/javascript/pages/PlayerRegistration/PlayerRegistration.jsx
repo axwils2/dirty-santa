@@ -7,10 +7,9 @@ import Container from '@material-ui/core/Container';
 
 import FullPageBox from 'components/FullPageBox';
 import PlayerForm from 'components/PlayerForm';
-import GiftForm from 'components/GiftForm';
 import { PlayerService, PlayerAvatarService } from 'services/api';
+import { useNotification } from 'hooks';
 
-import type { Match } from 'types/RouterTypes';
 import type { Player } from 'types/PlayerTypes';
 
 const useStyles = makeStyles(theme => ({
@@ -23,20 +22,18 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const PlayerRegistration = ({ match }: { match: Match }): React$Node => {
-  const gameToken = match.params.gameToken;
+const PlayerRegistration = (): React$Node => {
   const [player, setPlayer] = useState(null);
-  const classes = useStyles();
+  const { notify } = useNotification();
   const history = useHistory();
+  const classes = useStyles();
 
   useEffect(() => {
-    if (!gameToken) return;
-
-    PlayerService.newPlayer({ game_token: gameToken })
+    PlayerService.newPlayer()
       .then(response => {
         setPlayer(response);
-      })
-  }, [gameToken]);
+    })
+  }, []);
 
   const onSubmit = (savedPlayer: Player) => {
     PlayerService.create(savedPlayer)
@@ -49,10 +46,9 @@ const PlayerRegistration = ({ match }: { match: Match }): React$Node => {
             response.token,
             formData
           ).then(() => {
+            notify('Your information has been saved!');
             history.push(`/players/${response.token}`)
           })
-        } else {
-          history.push(`/players/${response.token}`)
         }
       })
   }

@@ -1,5 +1,5 @@
 // @flow
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
@@ -47,14 +47,20 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const GiftForm = ({ gift, onSubmit }: { gift: Gift, onSubmit: Gift => void }): React$Node => {
-  const [editableGift, setEditableGift] = useState(gift);
+const GiftForm = ({ gift, onSubmit }: { gift?: ?Gift, onSubmit: Gift => void }): React$Node => {
+  const [editableGift, setEditableGift] = useState(null);
   const [avatar, setAvatar] = useState(null);
   const classes = useStyles();
+
+  useEffect(() => {
+    GiftService.newGift()
+      .then(response => setEditableGift(response))
+  }, []);
 
   const submitForm = () => {
     if (!editableGift) return;
 
+    // $FlowFixMe
     onSubmit(editableGift);
   };
 
@@ -75,11 +81,28 @@ const GiftForm = ({ gift, onSubmit }: { gift: Gift, onSubmit: Gift => void }): R
   if (!editableGift) return null;
 
   return (
-    <Paper className={classes.form}>
+    <>
       <Typography variant='h5' gutterBottom>Gift Information</Typography>
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
-          <Typography variant='overline'>Gift Picture</Typography>
+        <Grid item xs={12}>
+          <TextField
+            label='Title'
+            value={editableGift.title || ''}
+            name='title'
+            onChange={updateGift}
+            margin='normal'
+            fullWidth
+          />
+          {/* <TextField
+            label='Secret Gift Card Description'
+            value={editableGift.description || ''}
+            name='description'
+            onChange={updateGift}
+            margin='normal'
+            fullWidth
+          /> */}
+        </Grid>
+        <Grid item xs={12}>
           <div className={classes.imageContainer}>
             <Avatar
               className={classes.image}
@@ -100,24 +123,6 @@ const GiftForm = ({ gift, onSubmit }: { gift: Gift, onSubmit: Gift => void }): R
             </label>
           </div>
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            label='Title'
-            value={editableGift.title || ''}
-            name='title'
-            onChange={updateGift}
-            margin='normal'
-            fullWidth
-          />
-          <TextField
-            label='Secret Gift Card Description'
-            value={editableGift.description || ''}
-            name='description'
-            onChange={updateGift}
-            margin='normal'
-            fullWidth
-          />
-        </Grid>
         <Grid item xs={12}>
           <Button
             color='primary'
@@ -128,7 +133,7 @@ const GiftForm = ({ gift, onSubmit }: { gift: Gift, onSubmit: Gift => void }): R
           </Button>
         </Grid>
       </Grid>
-    </Paper>
+    </>
   )
 };
 

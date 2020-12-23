@@ -3,11 +3,25 @@ import request from './ApiClient';
 
 import type { Gift } from 'types/GiftTypes';
 
-function newGift(token: string): Promise<Gift> {
+// function newGift(token: string): Promise<Gift> {
+//   return request({
+//     url: `/players/${token}/gifts/new`,
+//     method: 'GET'
+//   });
+// }
+
+function newGift(): Promise<Gift> {
   return request({
-    url: `/players/${token}/gifts/new`,
+    url: `/gifts/new`,
     method: 'GET'
   });
+}
+
+function list(): Promise<Array<Gift>> {
+  return request({
+    url: '/gifts',
+    method: 'GET'
+  })
 }
 
 function fetch(token: string): Promise<Gift> {
@@ -17,17 +31,17 @@ function fetch(token: string): Promise<Gift> {
   });
 }
 
-function create(token: string, data: $Shape<Gift>): Promise<Gift> {
+function create(data: $Shape<Gift>): Promise<Gift> {
   return request({
-    url: `/players/${token}/gifts`,
+    url: `/gifts`,
     method: 'POST',
     data
   });
 }
 
-function update(token: string, data: $Shape<Gift>): Promise<Gift> {
+function update(id: number, data: $Shape<Gift>): Promise<Gift> {
   return request({
-    url: `/players/${token}/gifts/${token}`,
+    url: `/gifts/${id}`,
     method: 'PATCH',
     data
   });
@@ -35,6 +49,7 @@ function update(token: string, data: $Shape<Gift>): Promise<Gift> {
 
 const GiftService = {
   create,
+  list,
   update,
   newGift,
   fetch
