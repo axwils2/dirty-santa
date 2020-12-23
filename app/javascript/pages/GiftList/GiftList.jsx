@@ -1,6 +1,8 @@
 // @flow
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import Container from '@material-ui/core/Container';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
@@ -69,6 +71,8 @@ const GiftList = ({ admin }: { admin?: boolean }): React$Node => {
   const { isOpen, open, close } = useIsOpen(false);
   const { notify } = useNotification();
   const classes = useStyles();
+  const theme = useTheme();
+  const isMobileView = useMediaQuery(theme.breakpoints.down('xs'));
 
   useEffect(() => {
     GiftService.list()
@@ -88,12 +92,8 @@ const GiftList = ({ admin }: { admin?: boolean }): React$Node => {
           if (admin) return;
 
           const updatedGift = response.data.attributes;
-          console.log(updatedGift);
-          console.log(gifts);
-          
 
           setGifts(prev => {
-            console.log(prev);
             const safeGifts = [...prev];
             const index = prev.findIndex(gift => gift.id === updatedGift.id);
             safeGifts[index] = updatedGift;
@@ -141,45 +141,47 @@ const GiftList = ({ admin }: { admin?: boolean }): React$Node => {
   return (
     <>
       <FullPageBox className={classes.root}>
-        <GridList cols={3} cellHeight={'auto'} spacing={16} className={classes.gridList}>
-          {gifts.map(gift => {
-            const receiver = players.find(player => player.id === gift.receiverId);
-            const stealCountRemaining = gift.stealCountRemaining;
-            const canUpdate = stealCountRemaining > 0 && admin;
+        <Container maxWidth="md">
+          <GridList cols={isMobileView ? 1 : 3} cellHeight={400} spacing={16} className={classes.gridList}>
+            {gifts.map(gift => {
+              const receiver = players.find(player => player.id === gift.receiverId);
+              const stealCountRemaining = gift.stealCountRemaining;
+              const canUpdate = stealCountRemaining > 0 && admin;
 
-            return (
-              <GridListTile key={gift.id} classes={{ root: classes.gridTile }}>
-                <img src={gift.imageUrl} alt={gift.title} />
-                {stealCountRemaining === 0 && (
-                  <div className={classes.complete}>
-                    <Typography variant='h4' style={{ color: '#fff' }}>SAFE!</Typography>
-                  </div>
-                )}
-                <GridListTileBar
-                  title={gift.title}
-                  subtitle={`Steals Remaining: ${stealCountRemaining}`}
-                  actionIcon={
-                    <div style={{ cursor: canUpdate ? 'pointer' : 'not-allowed' }} onClick={() => canUpdate && setActiveGift(gift)}>
-                      <Tooltip title={receiver?.name || ''}>
-                        <Avatar
-                          src={receiver?.avatarUrl}
-                          style={{ zIndex: 10 }}
-                        />
-                      </Tooltip>
+              return (
+                <GridListTile key={gift.id} classes={{ root: classes.gridTile }}>
+                  <img src={gift.imageUrl} alt={gift.title} />
+                  {stealCountRemaining === 0 && (
+                    <div className={classes.complete}>
+                      <Typography variant='h4' style={{ color: '#fff' }}>SAFE!</Typography>
                     </div>
-                  }
-                />
+                  )}
+                  <GridListTileBar
+                    title={gift.title}
+                    subtitle={`Steals Remaining: ${stealCountRemaining}`}
+                    actionIcon={
+                      <div style={{ cursor: canUpdate ? 'pointer' : 'not-allowed' }} onClick={() => canUpdate && setActiveGift(gift)}>
+                        <Tooltip title={receiver?.name || ''}>
+                          <Avatar
+                            src={receiver?.avatarUrl}
+                            style={{ zIndex: 10 }}
+                          />
+                        </Tooltip>
+                      </div>
+                    }
+                  />
+                </GridListTile>
+              )
+            })}
+            {admin && (
+              <GridListTile>
+                <div className={classes.addNew}>
+                <Button color='secondary' onClick={open}>Add New Gift</Button>
+                </div>
               </GridListTile>
-            )
-          })}
-          {admin && (
-            <GridListTile>
-              <div className={classes.addNew}>
-              <Button color='secondary' onClick={open}>Add New Gift</Button>
-              </div>
-            </GridListTile>
-          )}
-        </GridList>
+            )}
+          </GridList>
+        </Container>
       </FullPageBox>
       <Modal
         isOpen={!!activeGift}

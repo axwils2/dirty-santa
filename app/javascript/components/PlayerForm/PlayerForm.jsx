@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
   avatarContainer: {
     position: 'relative',
     width: '100%',
-    height: '252px'
+    height: '400px'
   },
   hidden: {
     display: 'none'
