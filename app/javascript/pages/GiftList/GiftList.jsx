@@ -73,8 +73,6 @@ const GiftList = ({ admin }: { admin?: boolean }): React$Node => {
   const classes = useStyles();
   const theme = useTheme();
   const isMobileView = useMediaQuery(theme.breakpoints.down('sm'));
-  console.log(window.innerWidth);
-  console.log(isMobileView);
 
   useEffect(() => {
     GiftService.list()
@@ -87,7 +85,7 @@ const GiftList = ({ admin }: { admin?: boolean }): React$Node => {
         setPlayers(response)
       })
 
-    CableApp.cable.subscriptions.create(
+    const channel = CableApp.cable.subscriptions.create(
       { channel: 'GiftsChannel' },
       {
         received: response => {
@@ -105,6 +103,8 @@ const GiftList = ({ admin }: { admin?: boolean }): React$Node => {
         }
       }
     )
+
+    return () => channel.unsubscribe();
   }, []);
 
   const createGift = gift => {
