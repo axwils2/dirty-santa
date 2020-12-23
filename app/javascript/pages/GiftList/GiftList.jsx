@@ -13,6 +13,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Avatar from '@material-ui/core/Avatar';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
+import actionCable from 'actioncable';
 
 import FullPageBox from 'components/FullPageBox';
 import GiftForm from 'components/GiftForm';
@@ -21,6 +22,9 @@ import { useIsOpen, useNotification } from 'hooks';
 import { GiftService, GiftImageService, PlayerService } from 'services/api';
 
 import type { Gift } from 'types/GiftTypes';
+
+const CableApp = {};
+CableApp.cable = actionCable.createConsumer(process.env.REACT_APP_CABLE_URL || 'ws://localhost:3000/cable');
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -76,6 +80,29 @@ const GiftList = ({ admin }: { admin?: boolean }): React$Node => {
       .then(response => {
         setPlayers(response)
       })
+
+    CableApp.cable.subscriptions.create(
+      { channel: 'GiftsChannel' },
+      {
+        received: response => {
+          if (admin) return;
+
+          const updatedGift = response.data.attributes;
+          console.log(updatedGift);
+          console.log(gifts);
+          
+
+          setGifts(prev => {
+            console.log(prev);
+            const safeGifts = [...prev];
+            const index = prev.findIndex(gift => gift.id === updatedGift.id);
+            safeGifts[index] = updatedGift;
+
+            return safeGifts;
+          });
+        }
+      }
+    )
   }, []);
 
   const createGift = gift => {

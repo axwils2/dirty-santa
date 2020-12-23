@@ -19,8 +19,10 @@ module Api
 
       def update
         gift.update!(gift_params)
-
-        render json: GiftSerializer.new(gift)
+        serialized_gift = GiftSerializer.new(gift).serializable_hash
+        
+        ActionCable.server.broadcast 'gifts_channel', serialized_gift
+        render json: serialized_gift
       end
 
       private
