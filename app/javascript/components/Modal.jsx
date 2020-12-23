@@ -22,7 +22,6 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up('md')]: {
       maxHeight: '80vh'
     },
-    height: '100%',
     padding: theme.spacing(0),
     borderRadius: '4px',
     position: 'relative',

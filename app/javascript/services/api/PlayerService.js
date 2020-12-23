@@ -10,6 +10,13 @@ function newPlayer(): Promise<Player> {
   });
 };
 
+function list(): Promise<Array<Player>> {
+  return request({
+    url: '/players',
+    method: 'GET'
+  });
+};
+
 function fetch(token: string): Promise<Player> {
   return request({
     url: `/players/${token}`,
@@ -35,6 +42,7 @@ function update(token: string, data: $Shape<Player>): Promise<Player> {
 
 const PlayerService = {
   fetch,
+  list,
   update,
   newPlayer,
   create

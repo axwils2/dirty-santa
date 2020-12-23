@@ -1,5 +1,5 @@
 // @flow
-import request from './ApiClient';
+import request, { snakeCaseKeys } from './ApiClient';
 
 import type { Gift } from 'types/GiftTypes';
 
@@ -43,7 +43,7 @@ function update(id: number, data: $Shape<Gift>): Promise<Gift> {
   return request({
     url: `/gifts/${id}`,
     method: 'PATCH',
-    data
+    data: snakeCaseKeys(data)
   });
 }
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_23_181445) do
+ActiveRecord::Schema.define(version: 2020_12_23_185025) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -58,6 +58,7 @@ ActiveRecord::Schema.define(version: 2020_12_23_181445) do
     t.bigint "receiver_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "steal_count_remaining", default: 2
     t.index ["receiver_id"], name: "index_gifts_on_receiver_id"
   end
 

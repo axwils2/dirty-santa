@@ -8,12 +8,17 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import EditIcon from '@material-ui/icons/Edit';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import Avatar from '@material-ui/core/Avatar';
+import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
 
 import FullPageBox from 'components/FullPageBox';
 import GiftForm from 'components/GiftForm';
 import Modal from 'components/Modal';
 import { useIsOpen, useNotification } from 'hooks';
-import { GiftService, GiftImageService } from 'services/api';
+import { GiftService, GiftImageService, PlayerService } from 'services/api';
 
 import type { Gift } from 'types/GiftTypes';
 
@@ -32,12 +37,31 @@ const useStyles = makeStyles(theme => ({
     border: '4px dashed #000',
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'center',
+    padding: theme.spacing(3)
+  },
+  gridTile: {
+    position: 'relative'
+  },
+  complete: {
+    position: 'absolute',
+    zIndex: 5,
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: theme.palette.secondary.main,
+    opacity: 0.9,
+    display: 'flex',
+    alignItems: 'center',
     justifyContent: 'center'
   }
 }));
 
 const GiftList = ({ admin }: { admin?: boolean }): React$Node => {
   const [gifts, setGifts] = useState<Array<Gift>>([]);
+  const [players, setPlayers] = useState([]);
+  const [activeGift, setActiveGift] = useState(null);
   const { isOpen, open, close } = useIsOpen(false);
   const { notify } = useNotification();
   const classes = useStyles();
@@ -46,6 +70,11 @@ const GiftList = ({ admin }: { admin?: boolean }): React$Node => {
     GiftService.list()
       .then(response => {
         setGifts(response)
+      })
+
+    PlayerService.list()
+      .then(response => {
+        setPlayers(response)
       })
   }, []);
 
@@ -65,34 +94,86 @@ const GiftList = ({ admin }: { admin?: boolean }): React$Node => {
       })
   };
 
+  const updateGift = e => {
+    if (!activeGift) return;
+    if (activeGift.stealCountRemaining === 0) return;
+
+    const receiverId = e.target.value;
+
+    GiftService.update(activeGift.id, { receiverId, stealCountRemaining: activeGift.stealCountRemaining - 1 })
+      .then(response => {
+        const safeGifts = [...gifts];
+        const index = gifts.findIndex(gift => gift.id === response.id);
+        safeGifts[index] = response;
+
+        setGifts(safeGifts);
+        setActiveGift(null);
+      })
+  };
+
   return (
     <>
       <FullPageBox className={classes.root}>
-        <GridList cellHeight={'auto'} className={classes.gridList}>
-          {gifts.map(gift => (
-            <GridListTile key={gift.id}>
-              <img src={gift.imageUrl} alt={gift.title} />
-              <GridListTileBar
-                title={gift.title}
-                subtitle={gift.receiverName && <span>by: {gift.receiverName}</span>}
-                actionIcon={
-                  <IconButton aria-label={`Update Gift`} className={classes.icon}>
-                    <EditIcon />
-                  </IconButton>
-                }
-              />
+        <GridList cols={3} cellHeight={'auto'} spacing={16} className={classes.gridList}>
+          {gifts.map(gift => {
+            const receiver = players.find(player => player.id === gift.receiverId);
+            const stealCountRemaining = gift.stealCountRemaining;
+            const canUpdate = stealCountRemaining > 0 && admin;
+
+            return (
+              <GridListTile key={gift.id} classes={{ root: classes.gridTile }}>
+                <img src={gift.imageUrl} alt={gift.title} />
+                {stealCountRemaining === 0 && (
+                  <div className={classes.complete}>
+                    <Typography variant='h4' style={{ color: '#fff' }}>SAFE!</Typography>
+                  </div>
+                )}
+                <GridListTileBar
+                  title={gift.title}
+                  subtitle={`Steals Remaining: ${stealCountRemaining}`}
+                  actionIcon={
+                    <div style={{ cursor: canUpdate ? 'pointer' : 'not-allowed' }} onClick={() => canUpdate && setActiveGift(gift)}>
+                      <Tooltip title={receiver?.name || ''}>
+                        <Avatar
+                          src={receiver?.avatarUrl}
+                          style={{ zIndex: 10 }}
+                        />
+                      </Tooltip>
+                    </div>
+                  }
+                />
+              </GridListTile>
+            )
+          })}
+          {admin && (
+            <GridListTile>
+              <div className={classes.addNew}>
+              <Button color='secondary' onClick={open}>Add New Gift</Button>
+              </div>
             </GridListTile>
-          ))}
-          <GridListTile>
-            <div className={classes.addNew}>
-            <Button color='secondary' onClick={open}>Add New Gift</Button>
-            </div>
-          </GridListTile>
+          )}
         </GridList>
       </FullPageBox>
       <Modal
+        isOpen={!!activeGift}
+        onClose={() => setActiveGift(null)}
+        maxWidth='sm'
+      >
+        <Select
+          id="demo-simple-select"
+          value={activeGift?.receiverId}
+          onChange={updateGift}
+          style={{ width: '100%' }}
+        >
+          {players.map(player => (
+            <MenuItem value={player.id} key={player.id}>{player.name}</MenuItem>
+          ))}
+        </Select>
+      </Modal>
+      <Modal
         isOpen={isOpen}
         onClose={close}
+        maxWidth='sm'
       >
         <GiftForm onSubmit={createGift} />
       </Modal>

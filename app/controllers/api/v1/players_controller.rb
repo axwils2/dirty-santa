@@ -5,6 +5,10 @@ module Api
         render json: PlayerSerializer.new(Player.new)
       end
 
+      def index
+        render json: PlayerSerializer.new(Player.all)
+      end
+
       def create
         player = Player.new(player_params)
         player.save!

@@ -17,6 +17,7 @@ const App = (): React$Node => (
       <NotificationProvider>
         <Switch>
           <Route path={ROUTES.PLAYER_REGISTRATION} component={PlayerRegistration} />
+          <Route path='/game-admin' render={props => <GiftList admin {...props} />} />
           <Route path='/' component={GiftList} />
         </Switch>
       </NotificationProvider>

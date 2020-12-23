@@ -1,7 +1,7 @@
 class PlayerSerializer < BaseSerializer
   extend AttachmentHelper
 
-  attributes :name, :email, :token
+  attributes :id, :name, :email, :token
 
   attribute :avatar_url do |player|
     attachment_url(player.avatar)

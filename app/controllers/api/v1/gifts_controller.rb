@@ -13,15 +13,15 @@ module Api
       end
 
       def index
-        gifts = Gift.all
+        gifts = Gift.all.order(:created_at)
         render json: GiftSerializer.new(gifts)
       end
 
-      # def update
-      #   player.update!(player_params)
+      def update
+        gift.update!(gift_params)
 
-      #   render json: PlayerSerializer.new(player)
-      # end
+        render json: GiftSerializer.new(gift)
+      end
 
       private
 
@@ -30,7 +30,7 @@ module Api
       end
 
       def gift_params
-        params.permit(:title, :receiver_id)
+        params.permit(:title, :receiver_id, :steal_count_remaining)
       end
     end
   end
