@@ -46,8 +46,11 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     padding: theme.spacing(3)
   },
-  gridTile: {
-    position: 'relative'
+  gridTileRoot: {
+    position: 'relative',
+  },
+  gridTileTile: {
+    borderRadius: '4px'
   },
   complete: {
     position: 'absolute',
@@ -151,7 +154,7 @@ const GiftList = ({ admin }: { admin?: boolean }): React$Node => {
               const canUpdate = stealCountRemaining > 0 && admin;
 
               return (
-                <GridListTile key={gift.id} classes={{ root: classes.gridTile }}>
+                <GridListTile key={gift.id} classes={{ root: classes.gridTileRoot, tile: classes.gridTileTile }}>
                   <img src={gift.imageUrl} alt={gift.title} />
                   {stealCountRemaining === 0 && (
                     <div className={classes.complete}>

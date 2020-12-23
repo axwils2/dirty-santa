@@ -17,9 +17,9 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.primary.main,
     overflowY: 'scroll'
   },
-  gridTile: {
-    position: 'relative'
-  },
+  gridTileTile: {
+    borderRadius: '4px'
+  }
 }));
 
 const PlayerList = ({ admin }: { admin?: boolean }): React$Node => {
@@ -41,7 +41,7 @@ const PlayerList = ({ admin }: { admin?: boolean }): React$Node => {
           <GridList cols={3} cellHeight={400} spacing={16} className={classes.gridList}>
             {players.map(player => {
               return (
-                <GridListTile key={player.id} classes={{ root: classes.gridTile }}>
+                <GridListTile key={player.id} classes={{ tile: classes.gridTileTile }}>
                   <img src={player.avatarUrl} alt={player.name} />
                   <GridListTileBar
                     title={player.name}
