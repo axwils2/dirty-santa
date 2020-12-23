@@ -6,7 +6,7 @@ module Api
       end
 
       def index
-        render json: PlayerSerializer.new(Player.all)
+        render json: PlayerSerializer.new(Player.all.order(:name))
       end
 
       def create

@@ -72,7 +72,9 @@ const GiftList = ({ admin }: { admin?: boolean }): React$Node => {
   const { notify } = useNotification();
   const classes = useStyles();
   const theme = useTheme();
-  const isMobileView = useMediaQuery(theme.breakpoints.down('xs'));
+  const isMobileView = useMediaQuery(theme.breakpoints.down('sm'));
+  console.log(window.innerWidth);
+  console.log(isMobileView);
 
   useEffect(() => {
     GiftService.list()
